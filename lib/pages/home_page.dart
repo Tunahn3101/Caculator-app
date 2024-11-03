@@ -1,5 +1,6 @@
 import 'package:caculatorapp/ultis/button_action.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -41,6 +42,23 @@ class _HomePageState extends State<HomePage> {
       return true;
     }
     return false;
+  }
+
+  void equalPressed() {
+    String finalQuestion = textInput;
+    finalQuestion = finalQuestion.replaceAll('x', '*');
+
+    Parser p = Parser();
+
+    Expression exp = p.parse(finalQuestion);
+    ContextModel cm = ContextModel();
+    double eval = exp.evaluate(EvaluationType.REAL, cm);
+
+    if (eval == eval.toInt()) {
+      textOutput = eval.toInt().toString();
+    } else {
+      textOutput = eval.toString();
+    }
   }
 
   @override
@@ -109,7 +127,9 @@ class _HomePageState extends State<HomePage> {
                 } else if (index == buttons.length - 1) {
                   return ButtonAction(
                     onTap: () {
-                      setState(() {});
+                      setState(() {
+                        equalPressed();
+                      });
                     },
                     textButton: buttons[index],
                     color: Colors.brown,
